@@ -85,6 +85,26 @@ __EOF__
 __EOF__
   end
 
+  #if mode > 2
+    # WEBRUBY.run_source
+    f.puts <<__EOF__
+  WEBRUBY.prototype.compile = function(src) {
+    var stack = Runtime.stackSave();
+    var addr  = Runtime.stackAlloc(src.length);
+    var addr2 = Runtime.stackAlloc(1);
+    var ret;
+    writeStringToMemory(src, addr);
+
+    ret = _webruby_internal_compile(this.mrb, addr, addr2, this.print_level);
+    console.log("addr2", addr2);
+    console.log("Pointer_stringify", Pointer_stringify(addr2));
+
+    Runtime.stackRestore(stack);
+    return ret;
+  };
+__EOF__
+  #end
+
   f.puts <<__EOF__
 
   if (typeof window === 'object') {
