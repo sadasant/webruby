@@ -88,16 +88,16 @@ __EOF__
   #if mode > 2
     # WEBRUBY.run_source
     f.puts <<__EOF__
-  WEBRUBY.prototype.compile = function(src) {
-    var stack = Runtime.stackSave();
-    var addr  = Runtime.stackAlloc(src.length);
-    var addr2 = Runtime.stackAlloc(1);
+  WEBRUBY.prototype.compile_to_file = function(src, file_name) {
+    var stack  = Runtime.stackSave();
+    var f_addr = Runtime.stackAlloc(file_name.length);
+    var addr   = Runtime.stackAlloc(src.length);
     var ret;
+
+    writeStringToMemory(file_name, f_addr);
     writeStringToMemory(src, addr);
 
-    ret = _webruby_internal_compile(this.mrb, addr, addr2, this.print_level);
-    console.log("addr2", addr2);
-    console.log("Pointer_stringify", Pointer_stringify(addr2));
+    ret = _webruby_internal_compile(this.mrb, f_addr, addr, this.print_level);
 
     Runtime.stackRestore(stack);
     return ret;
