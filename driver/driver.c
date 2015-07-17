@@ -8,6 +8,8 @@
 #include "mruby.h"
 #include "mruby/compile.h"
 #include "mruby/irep.h"
+#include "mruby/dump.h"
+#include "mruby/proc.h"
 
 /* The generated mruby bytecodes are stored in this array */
 extern const uint8_t app_irep[];
@@ -51,6 +53,35 @@ int webruby_internal_run(mrb_state* mrb, int print_level)
 int webruby_internal_run_source(mrb_state* mrb, const char *s, int print_level)
 {
   return check_and_print_errors(mrb, mrb_load_string(mrb, s), print_level);
+}
+
+int webruby_internal_compile(mrb_state* mrb, const char *file_name, const char *code, int print_level)
+{
+  mrb_value result;
+  int ret = -1;
+  int debuginfo = 0;
+  mrb_irep *irep;
+  mrbc_context *cxt;
+
+  cxt = mrbc_context_new(mrb);
+  cxt->no_exec = 1;
+
+  result = mrb_load_nstring_cxt(mrb, code, strlen(code), cxt);
+  if (mrb_undef_p(result)) {
+    mrbc_context_free(mrb, cxt);
+    mrb_close(mrb);
+    return MRB_DUMP_GENERAL_FAILURE;
+  }
+
+  FILE* file = fopen(file_name, "wb");
+
+  irep = mrb_proc_ptr(result)->body.irep;
+  ret = mrb_dump_irep_binary(mrb, irep, debuginfo, file);
+
+  mrbc_context_free(mrb, cxt);
+  fclose(file);
+
+  return ret;
 }
 
 int webruby_internal_setup(mrb_state* mrb)
