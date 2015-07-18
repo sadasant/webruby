@@ -1,3 +1,6 @@
 [submodule "modules/mrubymix"]
 	path = modules/mrubymix
 	url = git://github.com/xxuejie/mrubymix.git
+[submodule "modules/mruby"]
+	path = modules/mruby
+	url = https://github.com/chasonr/mruby
