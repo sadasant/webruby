@@ -7,9 +7,6 @@ MRuby::Build.new do |conf|
   toolchain :gcc
   conf.build_dir = '#{Webruby.full_build_dir}/mruby/host'
 
-  # Needed for bignum
-  conf.cc.defines << %w(SHA256_DIGEST_LENGTH=32 SHA512_DIGEST_LENGTH=64 MRB_STACK_EXTEND_DOUBLING)
-
   conf.gembox 'default'
 end
 
