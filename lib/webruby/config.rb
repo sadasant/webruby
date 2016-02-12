@@ -13,7 +13,7 @@ module Webruby
       @loading_mode = 2
       @output_name = 'webruby.js'
       @source_processor = :mrubymix
-      @cflags = %w(-Wall -Werror-implicit-function-declaration -Wno-warn-absolute-paths) + [optimization_flag]
+      @cflags = %w(-Wall -Werror-implicit-function-declaration -Wno-warn-absolute-paths -DMRB_INT64 -DSHA256_DIGEST_LENGTH=32 -DSHA512_DIGEST_LENGTH=64) + [optimization_flag]
       @ldflags = []
       @static_libs = []
     end
